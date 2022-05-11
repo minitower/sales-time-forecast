@@ -16,6 +16,7 @@ class ClickHouse:
         self.username = username
         self.password = password
         self.env_connect()
+        print(self.host, self.username, self.password)
         self.client = Client(self.host,
                              user=self.username,
                              password=self.password)
