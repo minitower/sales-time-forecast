@@ -9,7 +9,8 @@ def main():
     """
     df = pd.read_csv("./concatResponse.csv")
     model = Model(df=df)
-    model.statistics(printStat=True, writeStat=True)
+    model.preprocessor()
+    model.logitModel()
 
 if __name__ == "__main__":
     main()

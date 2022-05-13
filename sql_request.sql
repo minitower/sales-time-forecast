@@ -5,6 +5,7 @@ SELECT click_id,
 		anyHeavy(comment) as comment,
 		MAX(IF(call_comment == 'Продажа', 1, 0)) as isSuccsess,
 		MAX(IF(call_comment == 'Продажа', call_time, CAST('1970-01-01 00:00:00' as DateTime))) as saleTimestamp,
+		COUNT(click_id) as numOfCalls, 
 		groupUniqArray(call_time) as callTimeSeries,
 		groupUniqArray(call_comment) as callCommentArr
 FROM
