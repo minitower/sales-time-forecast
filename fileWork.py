@@ -1,4 +1,5 @@
 import warnings
+import os
 
 class FileWork:
     
@@ -14,6 +15,21 @@ class FileWork:
         if filename is not None:
             self.filename = filename
         
+    @staticmethod          
+    def removeFiles(filepath):
+        os.remove(filepath)
+    
+    def createFile(self):
+        """
+        Func for create file (in POSIX cli - touch)
+        """
+        with open(self.filename, 'w') as f:
+            f.write("")
+        if os.path.exists(self.filename):
+            return True
+        else:
+            return False
+    
     def readFromFile(self, filename=None):
         """
         Func for read information from file
@@ -73,4 +89,4 @@ class FileWork:
                     f.write(message + '\n')
                 else:
                     f.write(message)
-                
+

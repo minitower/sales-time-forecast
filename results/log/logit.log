@@ -1,4 +1,24 @@
 LOGIT MODEL STATS
 __________________________________________________________________________
-Mean accuracy on test dataset: 0.519660624875202
-Mean accuracy on full dataset: 0.5199662809699401
+Mean accuracy on test dataset: 0.7152903123946559
+Mean accuracy on full dataset: 0.715509383099167
+Diff in test data set: 0.000219070704511104
+Test predict raiser then math expectation on 0.2152903123946559
+Full predict raiser then math expectation on 0.215509383099167
+Logit model save on ./results/models/logit.pickle!
+SGD CLASSIFIER STATS
+__________________________________________________________________________
+Mean accuracy on test dataset: 0.7152903123946559
+Mean accuracy on full dataset: 0.715509383099167
+Diff in test data set: 0.000219070704511104
+Test predict raiser then math expectation on 0.2152903123946559
+Full predict raiser then math expectation on 0.215509383099167
+SGD CLASSIFIER save on ./results/models/logit.pickle!
+LASSO MODEL STATS
+__________________________________________________________________________
+Mean accuracy on test dataset: 0.06551541790295023
+Mean accuracy on full dataset: 0.06565951494732769
+Diff in test data set: 0.00014409704437745585
+Test predict raiser then math expectation on -0.43448458209704977
+Full predict raiser then math expectation on -0.4343404850526723
+LASSO model save on <fileWork.FileWork object at 0x7f0c86c3b130>!
