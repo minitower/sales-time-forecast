@@ -1,11 +1,13 @@
 from unittest import result
 import pandas as pd
+from sklearn import preprocessing
 from fileWork import *
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import SGDClassifier, LogisticRegression, Lasso
 from sklearn.preprocessing import StandardScaler
 from sklearn.pipeline import make_pipeline
 import pickle
+import numpy as np
 
 
 class Model:
@@ -23,11 +25,8 @@ class Model:
         other helpfull statistic methods
 
         Args:
-            mainLogFilename(string, default: "./results/log/main.log"):
-                path to main.log file
-            logFilename(string, default: "./results/log/logit.log"):
-                path to logit.log file
-            logFilename(string, default: "./results/log/logit.log"):
+            mainLogFilenaoc[df['var']>900*i, 'interval_var'] = 15*i
+string, default: "./results/log/logit.log"):
                  Env(dict, default: None): most easy way to update pathes
                 for log file. Just build .env file (like in .env_example)
                 and put this env on dict with param name. 
@@ -61,8 +60,8 @@ class Model:
             print (bool, default: True) - if print - print main statistic on console/terminal
             write (bool, default: True) - if write - write main statistic on ${PROJECT_PATH}/main.log
         """
-        successSales = self.df.loc[self.df['isSuccsess'] == 1]
-        lostSales = self.df.loc[self.df['isSuccsess'] == 0]
+        successSales = self.df.loc[self.df['isSuccess'] == 1]
+        lostSales = self.df.loc[self.df['isSuccess'] == 0]
         maleSales = self.df.loc[self.df['gender'] == 'm']
         femaleSales = self.df.loc[self.df['gender'] == 'f']
         knownAge = self.df.loc[self.df['gender'] == "None"]
@@ -92,9 +91,10 @@ class Model:
             self.fwMain.writeInFile(message=f"Percent of known age of customers in DB: {len(knownAge) / len(self.df)}")
 
     
-    def preprocessor(self, columns=['isSuccsess', 'numOfCalls'], 
-                    depVar = 'isSuccsess', withNoneValue=False, 
-                    saveDataCut=0.5, test_size=0.25, returnData=False):
+    def preprocessor(self, columns=['isSuccess', 'numOfCalls'], 
+                    depVar = 'isSuccess', withNoneValue=False, 
+                    saveDataCut=0.5, test_size=0.25, returnData=False, 
+                    intervalVar=True):
         """
         Func for preprocess pd.DataFrame with data from DB to 
         analysis.
@@ -102,7 +102,7 @@ class Model:
         Args:
             columns (list, default var state on source code): number of
                 columns in final Data Frame
-            depVar(string, default isSuccsess): state a dependent variable
+            depVar(string, default isSuccess): state a dependent variable
                 for next modeling
             withAgeOnly(bool, default: True): if True - use rows with known
                 age only.
@@ -112,10 +112,23 @@ class Model:
                 dataset)
             returnData(bool, default: False): if True - return four (4) dataset 
                 after split (x, y - test and train). Most usefull for debug
+            intervalVar(bool, default: True): if True - calculate interval var 
+                from var and add it in final data frame
         """
         df = self.df[columns]
+        
+        if intervalVar:
+            df = df.loc[df['fake_approve'] == 0]
+            df['interval_var'] = [np.NaN]*len(df)
+
+            df.loc[df['var']<900, 'interval_var'] = 0
+            for i in range(0,30):
+                df.loc[df['var']>900*i, 'interval_var'] = 15*i
+            df.loc[df['var']>26100, 'interval_var'] = np.NaN
+        
         if 'click_id' in columns:
             df.set_index('click_id', drop=True)
+            
         print(len(df))
         if not withNoneValue and 'age' in df.columns.values:
             df = df.loc[(df['age'].isna() == False) & (df['gender'] != "None")]
@@ -157,6 +170,8 @@ class Model:
         testScore = clf.score(self.X_test, self.y_test)
         fullScore = clf.score(self.full_X, self.full_y)
 
+        self.logitAccuracy = testScore
+        
         if printStat:
             print("LOGIT MODEL STATS")
             print("__________________________________________________________________________")
@@ -173,8 +188,8 @@ class Model:
             self.fwLogit.writeInFile(message=f"Mean accuracy on test dataset: {testScore}")
             self.fwLogit.writeInFile(message=f"Mean accuracy on full dataset: {fullScore}")
             self.fwLogit.writeInFile(message=f"Diff in test data set: {fullScore - testScore}")
-            self.fwLogit.writeInFile(message=f"Test predict raiser then math expectation on {testScore - 0.5}")
-            self.fwLogit.writeInFile(message=f"Full predict raiser then math expectation on {fullScore - 0.5}")
+            self.fwLogit.writeInFile(message=f"Test predict raiser then math expectation on {0.5 - testScore}")
+            self.fwLogit.writeInFile(message=f"Full predict raiser then math expectation on {0.5 - fullScore}")
         if saveModel:
             try:
                 pickle.dump(clf, self.logitModelFilename)
@@ -211,6 +226,8 @@ class Model:
         testScore = clf.score(self.X_test, self.y_test)
         fullScore = clf.score(self.full_X, self.full_y)
 
+        self.lassoAccuracy = testScore
+        
         if printStat:
             print("LASSO MODEL STATS")
             print("__________________________________________________________________________")
@@ -227,8 +244,8 @@ class Model:
             self.fwLogit.writeInFile(message=f"Mean accuracy on test dataset: {testScore}")
             self.fwLogit.writeInFile(message=f"Mean accuracy on full dataset: {fullScore}")
             self.fwLogit.writeInFile(message=f"Diff in test data set: {fullScore - testScore}")
-            self.fwLogit.writeInFile(message=f"Test predict raiser then math expectation on {testScore - 0.5}")
-            self.fwLogit.writeInFile(message=f"Full predict raiser then math expectation on {fullScore - 0.5}")
+            self.fwLogit.writeInFile(message=f"Test predict raiser then math expectation on {0.5 -testScore}")
+            self.fwLogit.writeInFile(message=f"Full predict raiser then math expectation on {0.5 - fullScore}")
         if saveModel:
             try:
                 pickle.dump(clf, self.fwLassoModel)
@@ -265,7 +282,9 @@ class Model:
                                 " age only (in preprocessing)")
         testScore = clf.score(self.X_test, self.y_test)
         fullScore = clf.score(self.full_X, self.full_y)
-
+        
+        self.sgdAccuracy = testScore
+        
         if printStat:
             print("SGD CLASSIFIER STATS")
             print("__________________________________________________________________________")
@@ -282,8 +301,8 @@ class Model:
             self.fwLogit.writeInFile(message=f"Mean accuracy on test dataset: {testScore}")
             self.fwLogit.writeInFile(message=f"Mean accuracy on full dataset: {fullScore}")
             self.fwLogit.writeInFile(message=f"Diff in test data set: {fullScore - testScore}")
-            self.fwLogit.writeInFile(message=f"Test predict raiser then math expectation on {testScore - 0.5}")
-            self.fwLogit.writeInFile(message=f"Full predict raiser then math expectation on {fullScore - 0.5}")
+            self.fwLogit.writeInFile(message=f"Test predict raiser then math expectation on {0.5 - testScore}")
+            self.fwLogit.writeInFile(message=f"Full predict raiser then math expectation on {0.5 - fullScore}")
         if saveModel:
             try:
                 pickle.dump(clf, self.fwsgdLogFilename)
@@ -295,4 +314,23 @@ class Model:
                 print(f"SGD CLASSIFIER save on {self.logitModelFilename}!")
             if writeStat:
                 self.fwLogit.writeInFile(message=f"SGD CLASSIFIER save on {self.logitModelFilename}!")
+    
+    
+    def findOptimalColumns(self, model=None):
+        """
+        Func for find more complex model for some columns from 
+        "maxColumns" list. Model param accurate some of models
         
+        Args:
+            model (string, default: None): param for state one of the model
+                from class. Expected value: "logit", "lasso", "sgd"
+        """
+        if model is None:
+            raise ValueError("MODEL PARAM DIDN'T STATE!")
+        
+        columnsArr = [['isSuccess', 'numOfCalls'], ['isSuccess', 'var'], 
+                      ['isSuccess', 'interval_var'], ['isSuccess', 'numOfCalls', 'interval_var']
+                      ]
+        
+        if "logit":
+            self.preprocessor(columns=colArr)
