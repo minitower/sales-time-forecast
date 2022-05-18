@@ -1,7 +1,9 @@
+from statistics import mode
 import pandas as pd
 from fileWork import *
 from forecastModel import Model
 from dotenv import load_dotenv
+import numpy as np
 
 def main():
     """
@@ -20,11 +22,27 @@ def main():
             FileWork.removeFiles(filepath = i)
 
     df = pd.read_csv("./concatResponse.csv")
+    
     model = Model(df=df, pathesDict=pathesDict)
-    model.preprocessor()
-    model.logitModel()
-    model.SGDModel()
-    model.lassoModel()
+    logitColumns = model.findOptimalColumns(model="logit")
+    print(f"Logit max accuracy: {model.maxAccuracy}")
+    logitAccuracy = model.maxAccuracy
+    lassoColumns = model.findOptimalColumns(model="lasso")
+    print(f"Lasso max accuracy: {model.maxAccuracy}")
+    lassoAccuracy = model.maxAccuracy
+    sgdColumns = model.findOptimalColumns(model="sgd")
+    print(f"SGD max accuracy: {model.maxAccuracy}")
+    sgdAccuracy = model.maxAccuracy
+    if logitAccuracy >= lassoAccuracy and \
+        logitAccuracy >= sgdAccuracy:
+            print(f"True columns: {logitColumns}")
+    elif lassoAccuracy>=logitAccuracy and \
+        lassoAccuracy>=sgdAccuracy:
+            print(f"True columns: {lassoColumns}")
+    elif sgdAccuracy>=logitAccuracy and \
+        sgdAccuracy>=lassoAccuracy:
+            print(f"True columns: {sgdColumns}")
+    
 
 if __name__ == "__main__":
     load_dotenv()

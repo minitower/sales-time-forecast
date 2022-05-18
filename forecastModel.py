@@ -1,3 +1,4 @@
+from re import I
 from unittest import result
 import pandas as pd
 from sklearn import preprocessing
@@ -32,6 +33,8 @@ string, default: "./results/log/logit.log"):
                 and put this env on dict with param name. 
         """
         self.df = df
+        self.intervalVar()
+        self.cleanDF = self.df.copy()
         self.logitModelFilename = logitModelFilename
         if pathesDict is None:
             self.fwMain = FileWork(mainLogFilename)
@@ -89,12 +92,22 @@ string, default: "./results/log/logit.log"):
             self.fwMain.writeInFile(message=f"Percent of gender of customers in DB: {(len(maleSales) + len(femaleSales)) / len(self.df)}")
             self.fwMain.writeInFile(message=f"Percent of unknown age of customers in DB: {1 - (len(knownAge) / len(self.df))}")
             self.fwMain.writeInFile(message=f"Percent of known age of customers in DB: {len(knownAge) / len(self.df)}")
+            
+    def intervalVar(self):
+        """
+        Func for add intervalVar in self.df
+        """
+        self.df['interval_var'] = [np.NaN]*len(self.df)
+
+        self.df.loc[self.df['var']<900, 'interval_var'] = 0
+        for i in range(0,30):
+            self.df.loc[self.df['var']>900*i, 'interval_var'] = 15*i
+        self.df.loc[self.df['var']>26100, 'interval_var'] = np.NaN
 
     
     def preprocessor(self, columns=['isSuccess', 'numOfCalls'], 
-                    depVar = 'isSuccess', withNoneValue=False, 
-                    saveDataCut=0.5, test_size=0.25, returnData=False, 
-                    intervalVar=True):
+                    depVar = 'isSuccess', withNoneValue=True, 
+                    saveDataCut=0.5, test_size=0.25, returnData=False):
         """
         Func for preprocess pd.DataFrame with data from DB to 
         analysis.
@@ -115,26 +128,21 @@ string, default: "./results/log/logit.log"):
             intervalVar(bool, default: True): if True - calculate interval var 
                 from var and add it in final data frame
         """
-        df = self.df[columns]
-        
-        if intervalVar:
-            df = df.loc[df['fake_approve'] == 0]
-            df['interval_var'] = [np.NaN]*len(df)
-
-            df.loc[df['var']<900, 'interval_var'] = 0
-            for i in range(0,30):
-                df.loc[df['var']>900*i, 'interval_var'] = 15*i
-            df.loc[df['var']>26100, 'interval_var'] = np.NaN
+        df = self.cleanDF[columns].copy()
+        try:
+            df = df.dropna(subset="interval_var")
+        except KeyError:
+            pass
         
         if 'click_id' in columns:
             df.set_index('click_id', drop=True)
             
-        print(len(df))
         if not withNoneValue and 'age' in df.columns.values:
             df = df.loc[(df['age'].isna() == False) & (df['gender'] != "None")]
             if len(df) / len(self.df) <= saveDataCut:
                 raise ValueError("saveDataCut value is higer then part of dataset, "
                                     "which will be delete from original Data Frame")
+        
         dictGender = {'m': 0, 'f':1}
         if 'gender' in df.columns.values:
             df['gender'] = df['gender'].map(dictGender)
@@ -164,9 +172,7 @@ string, default: "./results/log/logit.log"):
         """
         try:
             clf = LogisticRegression().fit(self.X_train, self.y_train)
-        except ValueError:
-            raise ValueError("Find None value of dataset! Please, use"
-                                " age only (in preprocessing)")
+        except ValueError:        print(len(df))
         testScore = clf.score(self.X_test, self.y_test)
         fullScore = clf.score(self.full_X, self.full_y)
 
@@ -239,24 +245,24 @@ string, default: "./results/log/logit.log"):
 
         
         if writeStat:
-            self.fwLogit.writeInFile(message="LASSO MODEL STATS")
-            self.fwLogit.writeInFile(message="__________________________________________________________________________")
-            self.fwLogit.writeInFile(message=f"Mean accuracy on test dataset: {testScore}")
-            self.fwLogit.writeInFile(message=f"Mean accuracy on full dataset: {fullScore}")
-            self.fwLogit.writeInFile(message=f"Diff in test data set: {fullScore - testScore}")
-            self.fwLogit.writeInFile(message=f"Test predict raiser then math expectation on {0.5 -testScore}")
-            self.fwLogit.writeInFile(message=f"Full predict raiser then math expectation on {0.5 - fullScore}")
+            self.fwlassoLogFilename.writeInFile(message="LASSO MODEL STATS")
+            self.fwlassoLogFilename.writeInFile(message="__________________________________________________________________________")
+            self.fwlassoLogFilename.writeInFile(message=f"Mean accuracy on test dataset: {testScore}")
+            self.fwlassoLogFilename.writeInFile(message=f"Mean accuracy on full dataset: {fullScore}")
+            self.fwlassoLogFilename.writeInFile(message=f"Diff in test data set: {fullScore - testScore}")
+            self.fwlassoLogFilename.writeInFile(message=f"Test predict raiser then math expectation on {0.5 -testScore}")
+            self.fwlassoLogFilename.writeInFile(message=f"Full predict raiser then math expectation on {0.5 - fullScore}")
         if saveModel:
             try:
                 pickle.dump(clf, self.fwLassoModel)
             except TypeError:
                 check = self.fwLassoModel.createFile()
                 if not check:
-                    raise FileNotFoundError(f"Can't create/open file {self.logitModelFilename}")
+                    raise FileNotFoundError(f"Can't create/open file {self.fwLassoModel}")
             if printStat:
                 print(f"LASSO model save on {self.fwLassoModel}!")
             if writeStat:
-                self.fwLogit.writeInFile(message=f"LASSO model save on {self.fwLassoModel}!")
+                self.fwlassoLogFilename.writeInFile(message=f"LASSO model save on {self.fwLassoModel}!")
         
         
     def SGDModel(self, printStat=True, writeStat=True, saveModel=True):
@@ -296,24 +302,24 @@ string, default: "./results/log/logit.log"):
 
         
         if writeStat:
-            self.fwLogit.writeInFile(message="SGD CLASSIFIER STATS")
-            self.fwLogit.writeInFile(message="__________________________________________________________________________")
-            self.fwLogit.writeInFile(message=f"Mean accuracy on test dataset: {testScore}")
-            self.fwLogit.writeInFile(message=f"Mean accuracy on full dataset: {fullScore}")
-            self.fwLogit.writeInFile(message=f"Diff in test data set: {fullScore - testScore}")
-            self.fwLogit.writeInFile(message=f"Test predict raiser then math expectation on {0.5 - testScore}")
-            self.fwLogit.writeInFile(message=f"Full predict raiser then math expectation on {0.5 - fullScore}")
+            self.fwsgdLogFilename.writeInFile(message="SGD CLASSIFIER STATS")
+            self.fwsgdLogFilename.writeInFile(message="__________________________________________________________________________")
+            self.fwsgdLogFilename.writeInFile(message=f"Mean accuracy on test dataset: {testScore}")
+            self.fwsgdLogFilename.writeInFile(message=f"Mean accuracy on full dataset: {fullScore}")
+            self.fwsgdLogFilename.writeInFile(message=f"Diff in test data set: {fullScore - testScore}")
+            self.fwsgdLogFilename.writeInFile(message=f"Test predict raiser then math expectation on {0.5 - testScore}")
+            self.fwsgdLogFilename.writeInFile(message=f"Full predict raiser then math expectation on {0.5 - fullScore}")
         if saveModel:
             try:
-                pickle.dump(clf, self.fwsgdLogFilename)
+                pickle.dump(clf, self.fwSGDModel)
             except TypeError:
-                check = self.fwLogitModel.createFile()
+                check = self.fwSGDModel.createFile()
                 if not check:
-                    raise FileNotFoundError(f"Can't create/open file {self.logitModelFilename}")
+                    raise FileNotFoundError(f"Can't create/open file {self.fwSGDModel}")
             if printStat:
-                print(f"SGD CLASSIFIER save on {self.logitModelFilename}!")
+                print(f"SGD CLASSIFIER save on {self.fwSGDModel}!")
             if writeStat:
-                self.fwLogit.writeInFile(message=f"SGD CLASSIFIER save on {self.logitModelFilename}!")
+                self.fwsgdLogFilename.writeInFile(message=f"SGD CLASSIFIER save on {self.fwSGDModel}!")
     
     
     def findOptimalColumns(self, model=None):
@@ -324,13 +330,47 @@ string, default: "./results/log/logit.log"):
         Args:
             model (string, default: None): param for state one of the model
                 from class. Expected value: "logit", "lasso", "sgd"
+        
+        Return list with most relevant columns for state model
         """
         if model is None:
             raise ValueError("MODEL PARAM DIDN'T STATE!")
         
-        columnsArr = [['isSuccess', 'numOfCalls'], ['isSuccess', 'var'], 
-                      ['isSuccess', 'interval_var'], ['isSuccess', 'numOfCalls', 'interval_var']
-                      ]
+        columnsArr =[['isSuccess', 'numOfCalls'], ['isSuccess', 'var'], 
+                      ['isSuccess', 'interval_var'], ['isSuccess', 'numOfCalls', 'interval_var']]
         
-        if "logit":
-            self.preprocessor(columns=colArr)
+        if model == "logit":
+            accuracyLog = []
+            for i in columnsArr:
+                self.df = self.preprocessor(columns=i)
+                self.logitModel()
+                accuracyLog.append(self.logitAccuracy)
+            trueAccuracy = accuracyLog.copy()
+            accuracyLog.sort()
+            self.maxAccuracy = accuracyLog[-1]
+            return columnsArr[trueAccuracy.index(self.maxAccuracy)]
+        
+        elif model == "lasso":
+            accuracyLog = []
+            for i in columnsArr:
+                self.df = self.preprocessor(columns=i)
+                self.lassoModel()
+                accuracyLog.append(self.lassoAccuracy)
+            trueAccuracy = accuracyLog.copy()
+            accuracyLog.sort()
+            self.maxAccuracy = accuracyLog[-1]
+            return columnsArr[trueAccuracy.index(self.maxAccuracy)]
+        
+        elif model == "sgd":
+            accuracyLog = []
+            for i in columnsArr:
+                self.df = self.preprocessor(columns=i)
+                self.SGDModel()
+                accuracyLog.append(self.sgdAccuracy)
+            trueAccuracy = accuracyLog.copy()
+            accuracyLog.sort()
+            self.maxAccuracy = accuracyLog[-1]
+            return columnsArr[trueAccuracy.index(self.maxAccuracy)]
+         
+        else:
+            raise ValueError("Model parameter didn't state! Current: {model}")

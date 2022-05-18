@@ -1,0 +1,32 @@
+LASSO MODEL STATS
+__________________________________________________________________________
+Mean accuracy on test dataset: 0.06496857017938129
+Mean accuracy on full dataset: 0.06567382768258834
+Diff in test data set: 0.0007052575032070463
+Test predict raiser then math expectation on 0.4350314298206187
+Full predict raiser then math expectation on 0.43432617231741166
+LASSO model save on <fileWork.FileWork object at 0x7f746083c730>!
+LASSO MODEL STATS
+__________________________________________________________________________
+Mean accuracy on test dataset: 0.06461014575025281
+Mean accuracy on full dataset: 0.06387580819597694
+Diff in test data set: -0.0007343375542758768
+Test predict raiser then math expectation on 0.4353898542497472
+Full predict raiser then math expectation on 0.43612419180402306
+LASSO model save on <fileWork.FileWork object at 0x7f746083c730>!
+LASSO MODEL STATS
+__________________________________________________________________________
+Mean accuracy on test dataset: 0.007535182132458185
+Mean accuracy on full dataset: 0.007352498801179497
+Diff in test data set: -0.00018268333127868797
+Test predict raiser then math expectation on 0.4924648178675418
+Full predict raiser then math expectation on 0.4926475011988205
+LASSO model save on <fileWork.FileWork object at 0x7f746083c730>!
+LASSO MODEL STATS
+__________________________________________________________________________
+Mean accuracy on test dataset: 0.007394938907288817
+Mean accuracy on full dataset: 0.007353450102809522
+Diff in test data set: -4.148880447929493e-05
+Test predict raiser then math expectation on 0.4926050610927112
+Full predict raiser then math expectation on 0.4926465498971905
+LASSO model save on <fileWork.FileWork object at 0x7f746083c730>!

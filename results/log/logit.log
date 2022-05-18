@@ -1,24 +1,32 @@
 LOGIT MODEL STATS
 __________________________________________________________________________
-Mean accuracy on test dataset: 0.7152903123946559
+Mean accuracy on test dataset: 0.7152881788428468
 Mean accuracy on full dataset: 0.715509383099167
-Diff in test data set: 0.000219070704511104
-Test predict raiser then math expectation on 0.2152903123946559
-Full predict raiser then math expectation on 0.215509383099167
+Diff in test data set: 0.00022120425632021767
+Test predict raiser then math expectation on -0.2152881788428468
+Full predict raiser then math expectation on -0.215509383099167
 Logit model save on ./results/models/logit.pickle!
-SGD CLASSIFIER STATS
+LOGIT MODEL STATS
 __________________________________________________________________________
-Mean accuracy on test dataset: 0.7152903123946559
+Mean accuracy on test dataset: 0.7156722181684738
 Mean accuracy on full dataset: 0.715509383099167
-Diff in test data set: 0.000219070704511104
-Test predict raiser then math expectation on 0.2152903123946559
-Full predict raiser then math expectation on 0.215509383099167
-SGD CLASSIFIER save on ./results/models/logit.pickle!
-LASSO MODEL STATS
+Diff in test data set: -0.00016283506930681035
+Test predict raiser then math expectation on -0.21567221816847382
+Full predict raiser then math expectation on -0.215509383099167
+Logit model save on ./results/models/logit.pickle!
+LOGIT MODEL STATS
 __________________________________________________________________________
-Mean accuracy on test dataset: 0.06551541790295023
-Mean accuracy on full dataset: 0.06565951494732769
-Diff in test data set: 0.00014409704437745585
-Test predict raiser then math expectation on -0.43448458209704977
-Full predict raiser then math expectation on -0.4343404850526723
-LASSO model save on <fileWork.FileWork object at 0x7f0c86c3b130>!
+Mean accuracy on test dataset: 0.6323019830956896
+Mean accuracy on full dataset: 0.6323738796414853
+Diff in test data set: 7.189654579564664e-05
+Test predict raiser then math expectation on -0.13230198309568963
+Full predict raiser then math expectation on -0.13237387964148528
+Logit model save on ./results/models/logit.pickle!
+LOGIT MODEL STATS
+__________________________________________________________________________
+Mean accuracy on test dataset: 0.6316259277469505
+Mean accuracy on full dataset: 0.6323738796414853
+Diff in test data set: 0.000747951894534804
+Test predict raiser then math expectation on -0.13162592774695048
+Full predict raiser then math expectation on -0.13237387964148528
+Logit model save on ./results/models/logit.pickle!
