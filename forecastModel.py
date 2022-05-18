@@ -5,8 +5,6 @@ from sklearn import preprocessing
 from fileWork import *
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import SGDClassifier, LogisticRegression, Lasso
-from sklearn.preprocessing import StandardScaler
-from sklearn.pipeline import make_pipeline
 import pickle
 import numpy as np
 
@@ -170,9 +168,7 @@ string, default: "./results/log/logit.log"):
             modelFilename(string, default: "./results/models/logit.pickle"):
                 path to logit model pickle file (for addictive analysis)
         """
-        try:
-            clf = LogisticRegression().fit(self.X_train, self.y_train)
-        except ValueError:        print(len(df))
+        clf = LogisticRegression().fit(self.X_train, self.y_train)
         testScore = clf.score(self.X_test, self.y_test)
         fullScore = clf.score(self.full_X, self.full_y)
 

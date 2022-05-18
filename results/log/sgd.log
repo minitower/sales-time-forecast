@@ -1,32 +1,32 @@
 SGD CLASSIFIER STATS
 __________________________________________________________________________
-Mean accuracy on test dataset: 0.7150897585246062
+Mean accuracy on test dataset: 0.7153863222260626
 Mean accuracy on full dataset: 0.715509383099167
-Diff in test data set: 0.00041962457456079516
-Test predict raiser then math expectation on -0.2150897585246062
+Diff in test data set: 0.00012306087310443026
+Test predict raiser then math expectation on -0.21538632222606258
 Full predict raiser then math expectation on -0.215509383099167
-SGD CLASSIFIER save on <fileWork.FileWork object at 0x7f746083d3c0>!
+SGD CLASSIFIER save on <fileWork.FileWork object at 0x7f09d34d13c0>!
 SGD CLASSIFIER STATS
 __________________________________________________________________________
-Mean accuracy on test dataset: 0.7149020059654109
+Mean accuracy on test dataset: 0.7156380813395292
 Mean accuracy on full dataset: 0.715509383099167
-Diff in test data set: 0.0006073771337561373
-Test predict raiser then math expectation on -0.21490200596541087
+Diff in test data set: -0.00012869824036221278
+Test predict raiser then math expectation on -0.21563808133952922
 Full predict raiser then math expectation on -0.215509383099167
-SGD CLASSIFIER save on <fileWork.FileWork object at 0x7f746083d3c0>!
+SGD CLASSIFIER save on <fileWork.FileWork object at 0x7f09d34d13c0>!
 SGD CLASSIFIER STATS
 __________________________________________________________________________
-Mean accuracy on test dataset: 0.6320356582613378
-Mean accuracy on full dataset: 0.6323738796414853
-Diff in test data set: 0.0003382213801474965
-Test predict raiser then math expectation on -0.13203565826133778
-Full predict raiser then math expectation on -0.13237387964148528
-SGD CLASSIFIER save on <fileWork.FileWork object at 0x7f746083d3c0>!
+Mean accuracy on test dataset: 0.5692532368710637
+Mean accuracy on full dataset: 0.568696542893726
+Diff in test data set: -0.0005566939773377078
+Test predict raiser then math expectation on -0.06925323687106366
+Full predict raiser then math expectation on -0.06869654289372595
+SGD CLASSIFIER save on <fileWork.FileWork object at 0x7f09d34d13c0>!
 SGD CLASSIFIER STATS
 __________________________________________________________________________
-Mean accuracy on test dataset: 0.6312366837582825
-Mean accuracy on full dataset: 0.6323738796414853
-Diff in test data set: 0.001137195883202824
-Test predict raiser then math expectation on -0.13123668375828246
-Full predict raiser then math expectation on -0.13237387964148528
-SGD CLASSIFIER save on <fileWork.FileWork object at 0x7f746083d3c0>!
+Mean accuracy on test dataset: 0.5689810587436491
+Mean accuracy on full dataset: 0.568696542893726
+Diff in test data set: -0.0002845158499231726
+Test predict raiser then math expectation on -0.06898105874364913
+Full predict raiser then math expectation on -0.06869654289372595
+SGD CLASSIFIER save on <fileWork.FileWork object at 0x7f09d34d13c0>!

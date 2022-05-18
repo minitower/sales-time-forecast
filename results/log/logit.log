@@ -1,32 +1,32 @@
 LOGIT MODEL STATS
 __________________________________________________________________________
-Mean accuracy on test dataset: 0.7152881788428468
+Mean accuracy on test dataset: 0.7143835528758145
 Mean accuracy on full dataset: 0.715509383099167
-Diff in test data set: 0.00022120425632021767
-Test predict raiser then math expectation on -0.2152881788428468
+Diff in test data set: 0.001125830223352553
+Test predict raiser then math expectation on -0.21438355287581445
 Full predict raiser then math expectation on -0.215509383099167
 Logit model save on ./results/models/logit.pickle!
 LOGIT MODEL STATS
 __________________________________________________________________________
-Mean accuracy on test dataset: 0.7156722181684738
+Mean accuracy on test dataset: 0.7163762902654565
 Mean accuracy on full dataset: 0.715509383099167
-Diff in test data set: -0.00016283506930681035
-Test predict raiser then math expectation on -0.21567221816847382
+Diff in test data set: -0.0008669071662894545
+Test predict raiser then math expectation on -0.21637629026545646
 Full predict raiser then math expectation on -0.215509383099167
 Logit model save on ./results/models/logit.pickle!
 LOGIT MODEL STATS
 __________________________________________________________________________
-Mean accuracy on test dataset: 0.6323019830956896
+Mean accuracy on test dataset: 0.6334872749408818
 Mean accuracy on full dataset: 0.6323738796414853
-Diff in test data set: 7.189654579564664e-05
-Test predict raiser then math expectation on -0.13230198309568963
+Diff in test data set: -0.001113395299396469
+Test predict raiser then math expectation on -0.13348727494088175
 Full predict raiser then math expectation on -0.13237387964148528
 Logit model save on ./results/models/logit.pickle!
 LOGIT MODEL STATS
 __________________________________________________________________________
-Mean accuracy on test dataset: 0.6316259277469505
+Mean accuracy on test dataset: 0.6320824846058393
 Mean accuracy on full dataset: 0.6323738796414853
-Diff in test data set: 0.000747951894534804
-Test predict raiser then math expectation on -0.13162592774695048
+Diff in test data set: 0.00029139503564601377
+Test predict raiser then math expectation on -0.13208248460583927
 Full predict raiser then math expectation on -0.13237387964148528
 Logit model save on ./results/models/logit.pickle!
