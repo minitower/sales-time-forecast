@@ -15,9 +15,17 @@ class ClickHouse:
         self.host = host
         self.username = username
         self.password = password
-        self.env_connect()
-        print(self.host, self.username, self.password)
-        self.client = Client(self.host,
+        if self.host is None or\
+            self.username is None or\
+                self.password is None:
+            self.env_connect()
+        if not self.host is None and \
+            not self.username is None or \
+                not self.password is None:
+            print(f"HOST is {self.host}")
+            print(f"USER is {self.username}")
+            print(f"PASS is {self.password}")
+            self.client = Client(self.host,
                              user=self.username,
                              password=self.password)
 
